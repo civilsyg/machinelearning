@@ -134,7 +134,7 @@ ylabel('Attribute')
 # plot the fitted model residual error as function of each attribute to
 # inspect for systematic structure in the residual
 
-f=5 # cross-validation fold to inspect
+f=3 # cross-validation fold to inspect
 ff=Features[:,f-1].nonzero()[0]
 if len(ff) is 0:
     print('\nNo features were selected, i.e. the data (X) in the fold cannot describe the outcomes (y).' )
@@ -152,8 +152,10 @@ else:
        xlabel(attributeNames[ff[i]])
        ylabel('residual error')
     
-    
+
 show()
+w0_ny = m.intercept_
+w1_ny, w2_ny, w3_ny,w4_ny = m.coef_
 
 print('Ran Exercise 6.2.1')
 
@@ -188,8 +190,8 @@ f = figure()
 def f(x1,x2):
     return w0 + w1 * x1 + w2 * x2
 
-x1 = np.linspace(-2,2,300)
-x2 = np.linspace(-2,2,300)
+x1 = np.linspace(-1,1,300)
+x2 = np.linspace(-1,1,300)
 
 x1,x2 = np.meshgrid(x1,x2)
 
@@ -205,7 +207,7 @@ ax.set_zlabel('z')
 
 
 ax.scatter(X_op[:,0],X_op[:,1],y)
-
+ax.view_init(20,25)
 
 axes(X_op,y,'.', )
 plot(X_op,y_true,'-')
