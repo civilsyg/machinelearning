@@ -7,7 +7,8 @@ Created on Tue Mar  6 17:36:20 2018
 """
 
 # exercise 6.2.1
-from matplotlib.pyplot import figure, plot, subplot, title, xlabel, ylabel, show, clim
+from matplotlib.pyplot import figure, plot, subplot, title, xlabel, ylabel, show, clim, axes
+from mpl_toolkits import mplot3d
 from scipy.io import loadmat
 import sklearn.linear_model as lm
 from sklearn import model_selection
@@ -155,3 +156,61 @@ else:
 show()
 
 print('Ran Exercise 6.2.1')
+
+X_op = np.delete(data,[0,1,2,3,5,7],1).squeeze()
+
+# Fit ordinary least squares regression model
+model = lm.LinearRegression(fit_intercept=True).fit(X_op, y)
+
+w0 = model.intercept_
+w1, w2 = model.coef_
+
+
+# Use dataset as in the previous exercise
+eps_mean, eps_std = 0, 0.1
+eps = np.array(eps_std*np.random.randn(N) + eps_mean).reshape(-1,1)
+
+y_model = w0 + w1 * X_op[:,0] +w2 * X_op[:,1]
+y_true = y_model  - eps
+
+
+
+# Compute model output:
+y_est = model.predict(X_op)
+
+# Or equivalently:
+#y_est = model.intercept_ + X @ model.coef_
+
+
+# Plot original data and the model output
+f = figure()
+
+def f(x1,x2):
+    return w0 + w1 * x1 + w2 * x2
+
+x1 = np.linspace(-2,2,300)
+x2 = np.linspace(-2,2,300)
+
+x1,x2 = np.meshgrid(x1,x2)
+
+Z = f(x1,x2)
+
+fig = figure()
+ax = axes(projection = '3d')
+
+ax.contour3D(x1,x2,Z,100)
+ax.set_xlabel('x1')
+ax.set_ylabel('x2')
+ax.set_zlabel('z')
+
+
+ax.scatter(X_op[:,0],X_op[:,1],y)
+
+
+axes(X_op,y,'.', )
+plot(X_op,y_true,'-')
+plot(X_op,y_est,'-')
+xlabel('X'); ylabel('y')
+legend(['Training data', 'Data generator', 'Regression fit (model)'])
+
+show()
