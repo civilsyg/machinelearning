@@ -13,7 +13,7 @@ from scipy.io import loadmat
 from sklearn import model_selection, tree
 import numpy as np
 from projekt2 import *
-
+np.random.seed(seed=10)
 # Load Matlab data file and extract variables of interest
 mat_data = pimaData
 X = X
@@ -82,3 +82,15 @@ legend(['Error_train','Error_test'])
 show()
 
 print('Ran Exercise 6.1.2')
+
+
+
+
+
+
+dtc = tree.DecisionTreeClassifier(criterion='gini', min_samples_split=3)
+dtc = dtc.fit(X,y)
+
+# Export tree graph for visualization purposes:
+# (note: you can use i.e. Graphviz application to visualize the file)
+out = tree.export_graphviz(dtc, out_file='tree_gini.gvz', feature_names=attributeNames)
