@@ -18,23 +18,27 @@ from projekt2 import *
 
 # Load Matlab data file and extract variables of interest
 mat_data = pimaData
-X = X
+
 
 mat_data_values = mat_data.values
-y = np.delete(mat_data_values,[0,1,2,3,4,5,6],1).squeeze()
+N, M = mat_data_values.shape
+
+data =  (mat_data_values - np.ones((N,M)) * mat_data_values.mean(0))* 1/(np.std(mat_data_values))
+
+X = np.delete(data,[1,7],1).squeeze()
+
+y = np.delete(data,[0,2,3,4,5,6,7],1).squeeze()
 
 attributeNames = attributeNames = [
     'pregnant',
-    'glucose',
     'bloodPressure',
     'skinThickness',
     'bodyMass',
     'pedigreeFunction',
     'age'
     ]
-classNames = [ 'Ikke Diabetes','Diabetes']
+
 N, M = X.shape
-C = len(classNames)
 
 
 ## Crossvalidation
@@ -129,7 +133,7 @@ ylabel('Attribute')
 # plot the fitted model residual error as function of each attribute to
 # inspect for systematic structure in the residual
 
-f=3 # cross-validation fold to inspect
+f=5 # cross-validation fold to inspect
 ff=Features[:,f-1].nonzero()[0]
 if len(ff) is 0:
     print('\nNo features were selected, i.e. the data (X) in the fold cannot describe the outcomes (y).' )
