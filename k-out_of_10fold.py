@@ -19,23 +19,44 @@ from projekt2 import *
 # Load Matlab data file and extract variables of interest
 mat_data = pimaData
 X = X
+y = pimaData1[:,7]
+
+attributeNames = [
+    'pregnant',
+    'glucose', 
+    'bloodPressure',
+    'skinThickness',
+    'bodyMass',
+    'pedigreeFunction',
+    'age'
+    ]
+classNames = [ 'Ikke Diabetes','Diabetes']
+N, M = X.shape
+C = len(classNames)
 
 
+# Distance metric (corresponds to 2nd norm, euclidean distance).
+# You can set dist=1 to obtain manhattan distance (cityblock distance).
+dist=2
 # Maximum number of neighbors
-L=40
+L=100
 
-CV = model_selection.LeaveOneOut()
+# K-fold crossvalidation
+K = 1000
+CV = model_selection.KFold(n_splits=K,shuffle=True)
 errors = np.zeros((N,L))
-i=0
-for train_index, test_index in CV.split(X, y):
-    print('Crossvalidation fold: {0}/{1}'.format(i+1,N))    
-    
-    # extract training and test set for current CV fold
-    X_train = X[train_index,:]
-    y_train = y[train_index]
-    X_test = X[test_index,:]
-    y_test = y[test_index]
+# Initialize variable
+#Error_train = np.empty((len(tc),K))
+#Error_test = np.empty((len(tc),K))
 
+i=0
+for train_index, test_index in CV.split(X):
+    print('Computing CV fold: {0}/{1}..'.format(i+1,K))
+
+    # extract training and test set for current CV fold
+    X_train, y_train = X[train_index,:], y[train_index]
+    X_test, y_test = X[test_index,:], y[test_index]
+    
     # Fit classifier and classify the test points (consider 1 to 40 neighbors)
     for l in range(1,L+1):
         knclassifier = KNeighborsClassifier(n_neighbors=l);
@@ -53,4 +74,6 @@ ylabel('Classification error rate (%)')
 show()
 
 print('Ran Exercise 7.1.2')
+
+
 
