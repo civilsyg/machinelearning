@@ -9,47 +9,44 @@ from scipy import stats
 
 
 from projekt2 import *
-# Fjerne bodymass
-X = np.delete(X,[1],1)
-
-y = np.array(pimaData['glucose'])
-
+np.random.seed(2)
 
 # Load Matlab data file and extract variables of interest
-#attributeNames = [name[0] for name in mat_data['attributeNames'][0]]
-#X = mat_data['X']
-#y = X[:,10]             # alcohol contents (target)
-#X = X[:,1:10]           # the rest of features
-N, M = X.shape
-C = 2
-#C = len(classNames)
-# Normalize data
-X = stats.zscore(X);
-#y = stats.zscore(y);
-                
-## Normalize and compute PCA (UNCOMMENT to experiment with PCA preprocessing)
-#Y = stats.zscore(X,0);
-#U,S,V = np.linalg.svd(Y,full_matrices=False)
-#V = V.T
-##Components to be included as features
-#k_pca = 3
-#X = X @ V[:,0:k_pca]
-#N, M = X.shape
+mat_data = pimaData
 
+mat_data_values = mat_data.values
+N, M = mat_data_values.shape
+
+data = stats.zscore(mat_data_values)
+
+X = np.delete(data,[1,7],1).squeeze()
+
+y = np.delete(data,[0,2,3,4,5,6,7],1).squeeze()
+
+attributeNames = attributeNames = [
+    'pregnant',
+    'bloodPressure',
+    'skinThickness',
+    'bodyMass',
+    'pedigreeFunction',
+    'age'
+    ]
+
+N, M = X.shape
 
 # Parameters for neural network classifier
 n_hidden_units = 4      # number of hidden units
-n_train = 5             # number of networks trained in each k-fold
-learning_goal = 100     # stop criterion 1 (train mse to be reached)
+n_train = 3             # number of networks trained in each k-fold
+learning_goal = 50     # stop criterion 1 (train mse to be reached)
 max_epochs = 64         # stop criterion 2 (max epochs in training)
 show_error_freq = 5     # frequency of training status updates
 
 # K-fold crossvalidation
-K = 3                   # only three folds to speed up this example
+K = 5                   # only three folds to speed up this example
 CV = model_selection.KFold(K,shuffle=True)
 
 # Variable for classification error
-errors = np.zeros(K)*np.nan
+errors_ANN = np.zeros(K)*np.nan
 error_hist = np.zeros((max_epochs,K))*np.nan
 bestnet = list()
 k=0
@@ -78,15 +75,16 @@ for train_index, test_index in CV.split(X,y):
 
     print('Best train error: {0}...'.format(best_train_error))
     y_est = bestnet[k].sim(X_test).squeeze()
-    errors[k] = np.power(y_est-y_test,2).sum().astype(float)/y_test.shape[0]
+    errors_ANN[k] = np.power(y_est-y_test,2).sum().astype(float)/y_test.shape[0]
+    
     k+=1
     #break
 
 # Print the average least squares error
-print('Mean-square error: {0}'.format(np.mean(errors)))
+print('Mean-square error: {0}'.format(np.mean(errors_ANN)))
 
 figure(figsize=(6,7));
-subplot(2,1,1); bar(range(0,K),errors); title('Mean-square errors');
+subplot(2,1,1); bar(range(0,K),errors_ANN); title('Mean-square errors');
 subplot(2,1,2); plot(error_hist); title('Training error as function of BP iterations');
 figure(figsize=(6,7));
 subplot(2,1,1); plot(y_est); plot(y_test); title('Last CV-fold: est_y vs. test_y'); 

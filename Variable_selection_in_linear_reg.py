@@ -23,11 +23,10 @@ from scipy import stats
 
 from projekt2 import *
 
-np.random.seed(235)
+np.random.seed(2)
 
 # Load Matlab data file and extract variables of interest
 mat_data = pimaData
-
 
 mat_data_values = mat_data.values
 N, M = mat_data_values.shape
@@ -60,7 +59,7 @@ Features = np.zeros((M,K))
 Error_train = np.empty((K,1))
 Error_test = np.empty((K,1))
 Error_train_fs = np.empty((K,1))
-Error_test_fs = np.empty((K,1))
+Error_test_fs_reg = np.empty((K,1))
 Error_train_nofeatures = np.empty((K,1))
 Error_test_nofeatures = np.empty((K,1))
 
@@ -101,7 +100,8 @@ for train_index, test_index in CV.split(X):
     else:
         m = lm.LinearRegression(fit_intercept=True).fit(X_train[:,selected_features], y_train)
         Error_train_fs[k] = np.square(y_train-m.predict(X_train[:,selected_features])).sum()/y_train.shape[0]
-        Error_test_fs[k] = np.square(y_test-m.predict(X_test[:,selected_features])).sum()/y_test.shape[0]
+        Error_test_fs_reg[k] = np.square(y_test-m.predict(X_test[:,selected_features])).sum()/y_test.shape[0]
+       
         
         figure(k)
         subplot(1,2,1)
@@ -134,9 +134,9 @@ print('- R^2 train:     {0}'.format((Error_train_nofeatures.sum()-Error_train.su
 print('- R^2 test:     {0}'.format((Error_test_nofeatures.sum()-Error_test.sum())/Error_test_nofeatures.sum()))
 print('Linear regression with feature selection:\n')
 print('- Training error: {0}'.format(Error_train_fs.mean()))
-print('- Test error:     {0}'.format(Error_test_fs.mean()))
+print('- Test error:     {0}'.format(Error_test_fs_reg.mean()))
 print('- R^2 train:     {0}'.format((Error_train_nofeatures.sum()-Error_train_fs.sum())/Error_train_nofeatures.sum()))
-print('- R^2 test:     {0}'.format((Error_test_nofeatures.sum()-Error_test_fs.sum())/Error_test_nofeatures.sum()))
+print('- R^2 test:     {0}'.format((Error_test_nofeatures.sum()-Error_test_fs_reg.sum())/Error_test_nofeatures.sum()))
 
 figure(k)
 subplot(1,3,2)
@@ -155,10 +155,10 @@ ff=Features[:,f-1].nonzero()[0]
 if len(ff) is 0:
     print('\nNo features were selected, i.e. the data (X) in the fold cannot describe the outcomes (y).' )
 else:
-    m = lm.LinearRegression(fit_intercept=True).fit(X[:,ff], y)
+    m_reg = lm.LinearRegression(fit_intercept=True).fit(X[:,ff], y)
     model = sm.OLS(y, X[:,ff]).fit()    
-    y_est= m.predict(X[:,ff])
-    residual=y-y_est
+    y_est_reg= m_reg.predict(X[:,ff])
+    residual=y-y_est_reg
         
     print('Residual error vs. Attributes for features selected in cross-validation fold {0}'.format(f))
     print(SE)
@@ -181,11 +181,12 @@ print('summary af den med det laveste Squared error{}'.format(results))
 
 
 
-X = np.delete(data,[1,2,3,5,6,7],1).squeeze()
+X = np.delete(data,[0,1,3,5,6,7],1).squeeze()
 
 y = np.delete(data,[0,2,3,4,5,6,7],1).squeeze()
 
-m = lm.LinearRegression(fit_intercept=True).fit(X, y)
+m_reg = lm.LinearRegression(fit_intercept=True, normalize = True).fit(X, y)
+y_reg = m_reg.predict(X)
 model = sm.OLS(y, X).fit()  
 results = model.summary()
 
