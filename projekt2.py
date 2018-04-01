@@ -43,7 +43,7 @@ pimaData = pimaData[pimaData.skinThickness != 0] #sletter rækker som indholder 
 pimaData = pimaData[pimaData.bodyMass != 0] #sletter rækker som indholder 0 i denne kolonne
 pimaData = pimaData[pimaData.glucose != 0]
 pimaData = pimaData[pimaData.insulin != 0]
-#pimaData = pimaData[pimaData.pedigreeFunction <= 1]#sletter rækker som indholder 0 i denne kolonne
+pimaData = pimaData[pimaData.pedigreeFunction <= 1]#sletter rækker som indholder 0 i denne kolonne
 pimaData = pimaData.drop(['insulin'], axis=1) #sletter kolonnen insulin 
 
 #pimaData = pimaData.drop(['pedigreeFunction'], axis=1)
