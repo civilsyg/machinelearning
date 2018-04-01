@@ -100,4 +100,4 @@ print('Ran Exercise 8.2.6')
 #% The weights if the network can be extracted via
 bestnet[0].layers[0].np['w'] # Get the weights of the first layer
 bestnet[0].layers[0].np['b'] # Get the bias of the first layer
-´
+    ´
