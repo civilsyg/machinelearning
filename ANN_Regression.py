@@ -25,7 +25,7 @@ C = 2
 #C = len(classNames)
 # Normalize data
 X = stats.zscore(X);
-#y = stats.zscore(y);
+y = stats.zscore(y);
                 
 ## Normalize and compute PCA (UNCOMMENT to experiment with PCA preprocessing)
 #Y = stats.zscore(X,0);
