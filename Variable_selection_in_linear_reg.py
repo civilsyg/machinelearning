@@ -18,8 +18,12 @@ from sklearn import model_selection
 from toolbox_02450 import feature_selector_lr, bmplot
 import numpy as np
 import statsmodels.formula.api as sm
+from scipy import stats
+
 
 from projekt2 import *
+
+np.random.seed(235)
 
 # Load Matlab data file and extract variables of interest
 mat_data = pimaData
@@ -28,7 +32,7 @@ mat_data = pimaData
 mat_data_values = mat_data.values
 N, M = mat_data_values.shape
 
-data =  (mat_data_values - np.ones((N,M)) * mat_data_values.mean(0))* 1/(np.std(mat_data_values))
+data = stats.zscore(mat_data_values)
 
 X = np.delete(data,[1,7],1).squeeze()
 
@@ -176,5 +180,18 @@ results = model.summary()
 print('summary af den med det laveste Squared error{}'.format(results))
 
 
-# Compute model output:
-y_est = m.predict(X[:,ff])
+
+X = np.delete(data,[1,2,3,5,6,7],1).squeeze()
+
+y = np.delete(data,[0,2,3,4,5,6,7],1).squeeze()
+
+m = lm.LinearRegression(fit_intercept=True).fit(X, y)
+model = sm.OLS(y, X).fit()  
+results = model.summary()
+
+results
+
+
+
+
+
