@@ -6,6 +6,9 @@ Created on Tue Mar  6 17:36:20 2018
 @author: ibenfjordkjaersgaard
 """
 
+import sys
+sys.path.append('/Users/ibenfjordkjaersgaard/Library/Mobile Documents/com~apple~CloudDocs/Documents/Uni/Semester 4/Machine learning og data mining/02450Toolbox_Python/Tools')
+
 # exercise 6.2.1
 from matplotlib.pyplot import figure, plot, subplot, title, xlabel, ylabel, show, clim, axes
 from mpl_toolkits import mplot3d
@@ -14,6 +17,7 @@ import sklearn.linear_model as lm
 from sklearn import model_selection
 from toolbox_02450 import feature_selector_lr, bmplot
 import numpy as np
+import statsmodels.formula.api as sm
 
 from projekt2 import *
 
@@ -56,6 +60,8 @@ Error_test_fs = np.empty((K,1))
 Error_train_nofeatures = np.empty((K,1))
 Error_test_nofeatures = np.empty((K,1))
 
+# bruges til at gve de 5 Squared error 
+SE = np.zeros((K,2))
 k=0
 for train_index, test_index in CV.split(X):
     
@@ -80,6 +86,9 @@ for train_index, test_index in CV.split(X):
     textout = '';
     # forward 
     selected_features, features_record, loss_record = feature_selector_lr(X_train, y_train, internal_cross_validation,display=textout)
+    # bestem squared error
+    SE[k,0] = k+1
+    SE[k,1] = loss_record[-1]
     
     Features[selected_features,k]=1
     # .. alternatively you could use module sklearn.feature_selection
@@ -89,7 +98,7 @@ for train_index, test_index in CV.split(X):
         m = lm.LinearRegression(fit_intercept=True).fit(X_train[:,selected_features], y_train)
         Error_train_fs[k] = np.square(y_train-m.predict(X_train[:,selected_features])).sum()/y_train.shape[0]
         Error_test_fs[k] = np.square(y_test-m.predict(X_test[:,selected_features])).sum()/y_test.shape[0]
-    
+        
         figure(k)
         subplot(1,2,1)
         plot(range(1,len(loss_record)), loss_record[1:])
@@ -107,6 +116,9 @@ for train_index, test_index in CV.split(X):
     print('Features no: {0}\n'.format(selected_features.size))
 
     k+=1
+    
+
+
 
 
 # Display results
@@ -134,85 +146,35 @@ ylabel('Attribute')
 # plot the fitted model residual error as function of each attribute to
 # inspect for systematic structure in the residual
 
-f=3 # cross-validation fold to inspect
+f= np.array(np.where(SE[:,1] == SE.min(0)[1])).flatten()+1# cross-validation fold to inspect with the lowest SE
 ff=Features[:,f-1].nonzero()[0]
 if len(ff) is 0:
     print('\nNo features were selected, i.e. the data (X) in the fold cannot describe the outcomes (y).' )
 else:
     m = lm.LinearRegression(fit_intercept=True).fit(X[:,ff], y)
-    
+    model = sm.OLS(y, X[:,ff]).fit()    
     y_est= m.predict(X[:,ff])
     residual=y-y_est
-    
+        
+    print('Residual error vs. Attributes for features selected in cross-validation fold {0}'.format(f))
+    print(SE)
     figure(k+1, figsize=(12,6))
     title('Residual error vs. Attributes for features selected in cross-validation fold {0}'.format(f))
     for i in range(0,len(ff)):
-       subplot(2,np.ceil(len(ff)/2.0),i+1)
-       plot(X[:,ff[i]],residual,'.')
-       xlabel(attributeNames[ff[i]])
-       ylabel('residual error')
-    
+        subplot(2,np.ceil(len(ff)/2.0),i+1)
+        plot(X[:,ff[i]],residual,'.')
+        xlabel(attributeNames[ff[i]])
+        ylabel('residual error')
+
 
 show()
+
 w0_ny = m.intercept_
-w1_ny, w2_ny, w3_ny,w4_ny = m.coef_
+coef = m.coef_
 
-print('Ran Exercise 6.2.1')
-
-X_op = np.delete(data,[0,1,2,3,5,7],1).squeeze()
-
-# Fit ordinary least squares regression model
-model = lm.LinearRegression(fit_intercept=True).fit(X_op, y)
-
-w0 = model.intercept_
-w1, w2 = model.coef_
-
-
-# Use dataset as in the previous exercise
-eps_mean, eps_std = 0, 0.1
-eps = np.array(eps_std*np.random.randn(N) + eps_mean).reshape(-1,1)
-
-y_model = w0 + w1 * X_op[:,0] +w2 * X_op[:,1]
-y_true = y_model  - eps
-
+results = model.summary()
+print('summary af den med det laveste Squared error{}'.format(results))
 
 
 # Compute model output:
-y_est = model.predict(X_op)
-
-# Or equivalently:
-#y_est = model.intercept_ + X @ model.coef_
-
-
-# Plot original data and the model output
-f = figure()
-
-def f(x1,x2):
-    return w0 + w1 * x1 + w2 * x2
-
-x1 = np.linspace(-1,1,300)
-x2 = np.linspace(-1,1,300)
-
-x1,x2 = np.meshgrid(x1,x2)
-
-Z = f(x1,x2)
-
-fig = figure()
-ax = axes(projection = '3d')
-
-ax.contour3D(x1,x2,Z,100)
-ax.set_xlabel('x1')
-ax.set_ylabel('x2')
-ax.set_zlabel('z')
-
-
-ax.scatter(X_op[:,0],X_op[:,1],y)
-ax.view_init(20,25)
-
-axes(X_op,y,'.', )
-plot(X_op,y_true,'-')
-plot(X_op,y_est,'-')
-xlabel('X'); ylabel('y')
-legend(['Training data', 'Data generator', 'Regression fit (model)'])
-
-show()
+y_est = m.predict(X[:,ff])
