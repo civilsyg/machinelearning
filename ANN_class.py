@@ -12,28 +12,27 @@ from projekt2 import *
 plt.style.use('default') # Set plot theme
 
 
-X = X[:,[4,3]]
+X = X[:,[1,4]]
 y = np.array(pimaData[['classVariable']])
 
-#attributeNames = [
+attributeNames = [
 #    'pregnant',
-#    'glucose',
+    'glucose',
 #    'bloodPressure',
 #    'skinThickness',
-#    'bodyMass',
+    'bodyMass',
 #    'pedigreeFunction',
 #    'age'
-#    ]
+    ]
 
 
-attributeNames = ['first','second']
 
 classNames = [ 'Ikke Diabetes','Diabetes']
 N, M = X.shape
 C = len(classNames)
 
 # Parameters for neural network classifier
-n_hidden_units = 10      # number of hidden units
+n_hidden_units = 20      # number of hidden units
 n_train = 2             # number of networks trained in each k-fold
 
 # These parameters are usually adjusted to: (1) data specifics, (2) computational constraints
@@ -54,7 +53,7 @@ for train_index, test_index in CV.split(X,y):
     
     # extract training and test set for current CV fold
     X_train = X[train_index,:]
-    y_train = y[train_index].astype(int)
+    y_train = y[train_index]#.astype(int)
     X_test = X[test_index,:]
     y_test = y[test_index]
     
@@ -81,9 +80,9 @@ print('Error rate: {0}%'.format(100*np.mean(errors)))
 
 # Display the decision boundary for the several crossvalidation folds.
 # (create grid of points, compute network output for each point, color-code and plot).
-grid_range = [-1, 2, -1, 2]; delta = 0.05; levels = 100
-a = np.arange(grid_range[0],grid_range[1],delta)
-b = np.arange(grid_range[2],grid_range[3],delta)
+grid_range = [0, 200, 0, 70]; delta = 1; levels = 100
+a = np.arange(grid_range[0],grid_range[1],1)
+b = np.arange(grid_range[2],grid_range[3],70/200)
 A, B = np.meshgrid(a, b)
 values = np.zeros(A.shape)
 
@@ -114,7 +113,7 @@ plot(range(max_epochs), [learning_goal]*max_epochs, '-.')
 
 show()
 
-print('Ran Exercise 8.2.2')
+print('ANN er fucking lort. Du skal aldrig bruge det til noget i livet!!!!!!')
 
 
 
