@@ -8,6 +8,8 @@ from scipy.io import loadmat
 import neurolab as nl
 from sklearn import model_selection
 
+
+plt.style.use('default') # Set plot theme
 # read XOR DATA from matlab datafile
 mat_data = loadmat('../Data/xor.mat')
 X = mat_data['X']
@@ -21,7 +23,7 @@ C = len(classNames)
 
 
 # Parameters for neural network classifier
-n_hidden_units = 1      # number of hidden units
+n_hidden_units = 4      # number of hidden units
 n_train = 2             # number of networks trained in each k-fold
 
 # These parameters are usually adjusted to: (1) data specifics, (2) computational constraints
