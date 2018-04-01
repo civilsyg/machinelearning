@@ -25,7 +25,7 @@ C = 2
 #C = len(classNames)
 # Normalize data
 X = stats.zscore(X);
-y = stats.zscore(y);
+#y = stats.zscore(y);
                 
 ## Normalize and compute PCA (UNCOMMENT to experiment with PCA preprocessing)
 #Y = stats.zscore(X,0);
@@ -38,7 +38,7 @@ y = stats.zscore(y);
 
 
 # Parameters for neural network classifier
-n_hidden_units = 10      # number of hidden units
+n_hidden_units = 4      # number of hidden units
 n_train = 5             # number of networks trained in each k-fold
 learning_goal = 100     # stop criterion 1 (train mse to be reached)
 max_epochs = 64         # stop criterion 2 (max epochs in training)
