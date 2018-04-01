@@ -9,11 +9,9 @@ from scipy import stats
 
 
 from projekt2 import *
+# Fjerne bodymass
+X = np.delete(X,[4],1)
 
-X = np.delete(X,[y==X])
-
-for i in range(np.shape(X)[1]):
-    
 y = np.array(pimaData[['bodyMass']])
 
 
@@ -100,4 +98,3 @@ print('Ran Exercise 8.2.6')
 #% The weights if the network can be extracted via
 bestnet[0].layers[0].np['w'] # Get the weights of the first layer
 bestnet[0].layers[0].np['b'] # Get the bias of the first layer
-    ´
