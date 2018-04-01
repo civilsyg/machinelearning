@@ -177,7 +177,7 @@ w0_ny = m.intercept_
 coef = m.coef_
 
 results = model.summary()
-print('summary af den med det laveste Squared error{}'.format(results))
+print('summary af den med det laveste Squared error{}'.format(results)) 
 
 
 

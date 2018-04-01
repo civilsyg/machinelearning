@@ -19,7 +19,7 @@ Error_ANN = errors_ANN
 
 Error_ANN.shape = (5,1)
 ## Crossvalidation
-# Create crossvalidation partition for evaluation
+# Create crossvalidation partition for evaluation 
 K = 5
 
 
