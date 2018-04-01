@@ -13,6 +13,7 @@ from projekt2 import *
 X = np.delete(X,[1],1)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Load Matlab data file and extract variables of interest 
 mat_data = pimaData
 
@@ -22,6 +23,9 @@ N, M = mat_data_values.shape
 data = stats.zscore(mat_data_values)
 
 X = np.delete(data,[1,7],1).squeeze()
+=======
+y = np.array(pimaData['glucose'])
+>>>>>>> 587a27d5fd9ce170ad0712d8bc1ced206415a2db
 =======
 y = np.array(pimaData['glucose'])
 >>>>>>> 587a27d5fd9ce170ad0712d8bc1ced206415a2db
