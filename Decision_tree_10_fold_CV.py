@@ -13,12 +13,20 @@ from scipy.io import loadmat
 from sklearn import model_selection, tree
 import numpy as np
 from projekt2 import *
-np.random.seed(seed=10)
+from scipy import stats
+
+np.random.seed(2)
+
+
 # Load Matlab data file and extract variables of interest
 mat_data = pimaData
-X = X
 
 mat_data_values = mat_data.values
+N, M = mat_data_values.shape
+
+data = stats.zscore(mat_data_values)
+
+X = np.delete(data,[7],1).squeeze()
 y = np.delete(mat_data_values,[0,1,2,3,4,5,6],1).squeeze()
 
 attributeNames = attributeNames = [
@@ -38,13 +46,15 @@ C = len(classNames)
 tc = np.arange(2, 21, 1)
 
 # K-fold crossvalidation
-K = 10
+K = 5
 CV = model_selection.KFold(n_splits=K,shuffle=True)
 #CV = model_selection.LeaveOneOut()
 
 # Initialize variable
 Error_train = np.empty((len(tc),K))
 Error_test = np.empty((len(tc),K))
+Error_dectree = np.empty((K,1))
+#max_depth = np.empty((tc,2))
 
 k=0
 for train_index, test_index in CV.split(X):
@@ -64,6 +74,11 @@ for train_index, test_index in CV.split(X):
         misclass_rate_test = sum(np.abs(y_est_test - y_test)) / float(len(y_est_test))
         misclass_rate_train = sum(np.abs(y_est_train - y_train)) / float(len(y_est_train))
         Error_test[i,k], Error_train[i,k] = misclass_rate_test, misclass_rate_train
+        
+        model_dectree = dtc.fit(X_train, y_train)
+        y_dectree = model_dectree.predict(X_test)
+        Error_dectree[k] = 100*(y_dectree!=y_test).sum().astype(float)/len(y_test)
+        
     k+=1
 
     
@@ -81,14 +96,12 @@ legend(['Error_train','Error_test'])
     
 show()
 
-print('Ran Exercise 6.1.2')
 
 
 
 
 
-
-dtc = tree.DecisionTreeClassifier(criterion='gini', min_samples_split=3)
+dtc = tree.DecisionTreeClassifier(criterion='gini', max_depth=2)
 dtc = dtc.fit(X,y)
 
 # Export tree graph for visualization purposes:

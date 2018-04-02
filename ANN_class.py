@@ -9,6 +9,7 @@ import neurolab as nl
 from sklearn import model_selection
 
 from projekt2 import *
+np.random.seed(2)
 plt.style.use('default') # Set plot theme
 
 
@@ -40,11 +41,12 @@ learning_goal = 2.0     # stop criterion 1 (train mse to be reached)
 max_epochs = 400        # stop criterion 2 (max epochs in training)
 
 # K-fold CrossValidation (4 folds here to speed up this example)
-K = 4
+K = 5
 CV = model_selection.KFold(K,shuffle=True)
 
 # Variable for classification error
 errors = np.zeros(K)*np.nan
+Error_ANN = np.empty((K,1))
 error_hist = np.zeros((max_epochs,K))*np.nan
 bestnet = list()
 k=0
@@ -71,6 +73,7 @@ for train_index, test_index in CV.split(X,y):
     y_est = bestnet[k].sim(X_test)
     y_est = (y_est>.5).astype(int)
     errors[k] = (y_est!=y_test).sum().astype(float)/y_test.shape[0]
+    Error_ANN[k] = 100*(y_est!=y_test).sum().astype(float)/len(y_test)
     k+=1
     
 
