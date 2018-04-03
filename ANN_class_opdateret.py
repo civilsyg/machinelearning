@@ -1,5 +1,6 @@
 # exercise 8.2.5
-
+import sys
+#sys.path.append('/Users/mikkelsinkjaer/Documents/GitHub/machinelearning/02450Toolbox_Python/Scripts')
 from matplotlib.pyplot import (figure,plot, subplot, bar, title, show)
 import numpy as np
 from scipy.io import loadmat
@@ -8,7 +9,8 @@ from sklearn import model_selection
 from scipy import stats
 
 # Load Matlab data file and extract variables of interest
-mat_data = loadmat('../Data/wine2.mat')
+
+#mat_data = loadmat('/Users/mikkelsinkjaer/Documents/GitHub/machinelearning/02450Toolbox_Python/Data/wine2.mat')
 attributeNames = [name[0] for name in mat_data['attributeNames'][0]]
 X = mat_data['X']
 y = mat_data['y']
@@ -23,7 +25,7 @@ X = stats.zscore(X);
 n_hidden_units = 2     # number of hidden units
 n_train = 2             # number of networks trained in each k-fold
 learning_goal = 10      # stop criterion 1 (train mse to be reached)
-max_epochs = 64         # stop criterion 2 (max epochs in training)
+max_epochs = 5         # stop criterion 2 (max epochs in training)
 show_error_freq = 3     # frequency of training status updates
 
 
@@ -42,7 +44,7 @@ k=0
 
 for train_index, test_index in CV.split(X,y):
     print('\nCrossvalidation fold: {0}/{1}'.format(k+1,K))    
-    
+    print('cv2')
     # extract training and test set for current CV fold
     X_train = X[train_index,:]
     y_train = y[train_index,:]
@@ -55,21 +57,22 @@ for train_index, test_index in CV.split(X,y):
         y_train_j = y[train_index_j]
         X_test_j = X[test_index_j,:]
         y_test_j = y[test_index_j]
-        
+        print('cv1')
         besterror_j = 1e100
-        n_hidden_units = 0
+        n_hidden_units = 1
         
         for j in range(2,4):
+            print('j = {:d}'.format(j))
             ann_j = nl.net.newff([[-3, 3]]*M, [j, 1], [nl.trans.TanSig(),nl.trans.PureLin()])
             test_error_j = ann_j.train(X_train_j, y_train_j.reshape(-1,1), goal=learning_goal, epochs=max_epochs, show=show_error_freq)
-            
+
             for i in range(n_train):
                 print('Training network {0}/{1}...'.format(i+1,n_train))
                 # Create randomly initialized network with 2 layers
                 ann_i = nl.net.newff([[-3, 3]]*M, [j, 1], [nl.trans.TanSig(),nl.trans.PureLin()])
                 if i==0:
                     bestnet_i.append(ann_i)
-                    
+
                 # train network
                 train_error_i = ann_i.train(X_train_j, y_train_j.reshape(-1,1), goal=learning_goal, epochs=max_epochs, show=show_error_freq)
                 
@@ -84,7 +87,7 @@ for train_index, test_index in CV.split(X,y):
             if errors_j[k] < besterror_j:
                 n_hidden_units = j
                 besterror_j = test_error_j[-1]
-    
+    print('ude af cv1')
     best_train_error = 1e100
     for i in range(n_train):
         print('Training network {0}/{1}...'.format(i+1,n_train))
