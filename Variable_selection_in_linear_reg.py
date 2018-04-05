@@ -6,13 +6,8 @@ Created on Tue Mar  6 17:36:20 2018
 @author: ibenfjordkjaersgaard
 """
 
-import sys
-sys.path.append('/Users/ibenfjordkjaersgaard/Library/Mobile Documents/com~apple~CloudDocs/Documents/Uni/Semester 4/Machine learning og data mining/02450Toolbox_Python/Tools')
-
-# exercise 6.2.1
-from matplotlib.pyplot import figure, plot, subplot, title, xlabel, ylabel, show, clim, axes
-from mpl_toolkits import mplot3d
-from scipy.io import loadmat
+from matplotlib.pyplot import figure, plot, subplot, title, xlabel, ylabel, show, clim, savefig
+#from mpl_toolkits import mplot3d
 import sklearn.linear_model as lm
 from sklearn import model_selection
 from toolbox_02450 import feature_selector_lr, bmplot
@@ -21,7 +16,7 @@ import statsmodels.formula.api as sm
 from scipy import stats
 
 
-from projekt2 import *
+from projekt2 import pimaData
 
 np.random.seed(2)
 
@@ -60,6 +55,7 @@ Error_train = np.empty((K,1))
 Error_test = np.empty((K,1))
 Error_train_fs = np.empty((K,1))
 Error_test_fs_reg = np.empty((K,1))
+Error_mean_reg = np.empty((K,1))
 Error_train_nofeatures = np.empty((K,1))
 Error_test_nofeatures = np.empty((K,1))
 
@@ -101,7 +97,7 @@ for train_index, test_index in CV.split(X):
         m = lm.LinearRegression(fit_intercept=True).fit(X_train[:,selected_features], y_train)
         Error_train_fs[k] = np.square(y_train-m.predict(X_train[:,selected_features])).sum()/y_train.shape[0]
         Error_test_fs_reg[k] = np.square(y_test-m.predict(X_test[:,selected_features])).sum()/y_test.shape[0]
-       
+        Error_mean_reg[k] = np.square(y.mean() - y_train).sum()/y_train.shape[0]
         
         figure(k)
         subplot(1,2,1)
@@ -113,6 +109,8 @@ for train_index, test_index in CV.split(X):
         bmplot(attributeNames, range(1,features_record.shape[1]), -features_record[:,1:])
         clim(-1.5,0)
         xlabel('Iteration')
+        savefig('Squared error (crossvalidation) and Iteration in crossvalidation {0}.png'.format(k+1))
+        
 
     print('Cross validation fold {0}/{1}'.format(k+1,K))
     print('Train indices: {0}'.format(train_index))
@@ -144,6 +142,7 @@ bmplot(attributeNames, range(1,Features.shape[1]+1), -Features)
 clim(-1.5,0)
 xlabel('Crossvalidation fold')
 ylabel('Attribute')
+savefig('Crossvalidation fold and Attribute.png')
 
 
 # Inspect selected feature coefficients effect on the entire dataset and
@@ -160,39 +159,24 @@ else:
     y_est_reg= m_reg.predict(X[:,ff])
     residual=y-y_est_reg
         
-    print('Residual error vs. Attributes for features selected in cross-validation fold {0}'.format(f))
+    print('Residual error vs. Attributes for features selected with Squared error {0}'.format(SE.min(0)[1]))
     print(SE)
     figure(k+1, figsize=(12,6))
-    title('Residual error vs. Attributes for features selected in cross-validation fold {0}'.format(f))
+    title('Residual error vs. Attributes for features selected with Squared error {0}'.format(SE.min(0)[1]))
     for i in range(0,len(ff)):
         subplot(2,np.ceil(len(ff)/2.0),i+1)
         plot(X[:,ff[i]],residual,'.')
         xlabel(attributeNames[ff[i]])
         ylabel('residual error')
+        savefig('Residual error vs. Attributes for features selected with Squared error {0}.png'.format(round(SE.min(0)[1],2)))
 
 
 show()
 
-w0_ny = m.intercept_
-coef = m.coef_
-
 results = model.summary()
-print('summary af den med det laveste Squared error{}'.format(results)) 
+print('Summary of the lowest squared error{}'.format(results)) 
 
-
-
-X = np.delete(data,[0,1,3,5,6,7],1).squeeze()
-
-y = np.delete(data,[0,2,3,4,5,6,7],1).squeeze()
-
-m_reg = lm.LinearRegression(fit_intercept=True, normalize = True).fit(X, y)
-y_reg = m_reg.predict(X)
-model = sm.OLS(y, X).fit()  
-results = model.summary()
 
 results
-
-
-
 
 
