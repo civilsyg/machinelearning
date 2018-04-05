@@ -12,7 +12,7 @@ np.random.seed(2)
 plt.style.use('default') # Set plot theme
 
 
-X = X[:,[1,2,4]] # extract attributes vi want to use 
+#X = X[:,[1,2,4]] # extract attributes vi want to use 
 y = np.array(pimaData[['classVariable']]) # real prediction 
 
 attributeNames = [
@@ -28,14 +28,14 @@ attributeNames = [
 N, M = X.shape
 C = 2
 # Normalize data
-X = stats.zscore(X);
+ X = stats.zscore(X);
 
 # Parameters for neural network classifier
 n_hidden_units = 2     # number of hidden units
 n_train = 2             # number of networks trained in each k-fold
-learning_goal = 5      # stop criterion 1 (train mse to be reached)
-max_epochs = 2         # stop criterion 2 (max epochs in training)
-show_error_freq = 3     # frequency of training status updates
+learning_goal = 10      # stop criterion 1 (train mse to be reached)
+max_epochs = 20         # stop criterion 2 (max epochs in training)
+show_error_freq = 10     # frequency of training status updates
 
 
 # K-fold crossvalidation
@@ -117,6 +117,7 @@ for train_index, test_index in CV.split(X,y):
     y_est = bestnet[k].sim(X_test)
     y_est = (y_est>.5).astype(int)
     errors[k] = (y_est!=y_test).sum().astype(float)/y_test.shape[0]
+    Error_ANN_class[k] = 100*(y_est!=y_test).sum().astype(float)/len(y_test)
     k+=1
     
 

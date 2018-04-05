@@ -33,9 +33,9 @@ X = stats.zscore(X);
 # Parameters for neural network classifier
 n_hidden_units = 2      # number of hidden units
 n_train = 2             # number of networks trained in each k-fold
-learning_goal = 1800     # stop criterion 1 (train mse to be reached)
-max_epochs = 5         # stop criterion 2 (max epochs in training)
-show_error_freq = 5     # frequency of training status updates
+learning_goal = 10     # stop criterion 1 (train mse to be reached)
+max_epochs = 20         # stop criterion 2 (max epochs in training)
+show_error_freq = 10     # frequency of training status updates
 
 # K-fold crossvalidation
 K = 3                   # only five folds to speed up this example
@@ -70,7 +70,7 @@ for train_index, test_index in CV.split(X,y):
         besterror_j = 1e100
         n_hidden_units = 1
         
-        for j in range(2,4):
+        for j in range(2,6):
             print('j = {:d}'.format(j))
             ann_j = nl.net.newff([[-3, 3]]*M, [j, 1], [nl.trans.TanSig(),nl.trans.PureLin()])
             test_error_j = ann_j.train(X_train_j, y_train_j.reshape(-1,1), goal=learning_goal, epochs=max_epochs, show=show_error_freq)
@@ -115,10 +115,8 @@ for train_index, test_index in CV.split(X,y):
     print('Best train error: {0}...'.format(best_train_error))
     y_est = bestnet[k].sim(X_test).squeeze()
     errors[k] = np.power(y_est-y_test,2).sum().astype(float)/y_test.shape[0]
-    Error_ANN[k] = 100*(y_est!=y_test).sum().astype(float)/len(y_test)
-
     k+=1
-    break
+
 
 # Print the average least squares error
 print('Mean-square error: {0}'.format(np.mean(errors)))
