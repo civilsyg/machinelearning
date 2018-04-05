@@ -129,7 +129,7 @@ for train_index, test_index in CV.split(X,y):
     k+=1
 
 # Print the average least squares error
-print('Mean-square error: {0}'.format(np.mean(errors)))
+print('Mean-square error: {0}'.format(np.mean(Error_ANN)))
 
 figure(figsize=(6,7));
 subplot(2,1,1); bar(range(0,K),Error_ANN); title('Mean-square errors');
