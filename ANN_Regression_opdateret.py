@@ -9,7 +9,7 @@ from scipy import stats
 import math as m
 
 # Load Matlab data file and extract variables of interest
-mat_data = loadmat('../Data/wine2.mat')
+mat_data = loadmat('/Users/mikkelsinkjaer/Documents/GitHub/machinelearning/02450Toolbox_Python/Data/wine2.mat')
 attributeNames = [name[0] for name in mat_data['attributeNames'][0]]
 X = mat_data['X']
 y = X[:,10]             # alcohol contents (target)
@@ -33,8 +33,8 @@ X = stats.zscore(X);
 # Parameters for neural network classifier
 n_hidden_units = 2      # number of hidden units
 n_train = 2             # number of networks trained in each k-fold
-learning_goal = 100     # stop criterion 1 (train mse to be reached)
-max_epochs = 100         # stop criterion 2 (max epochs in training)
+learning_goal = 1800     # stop criterion 1 (train mse to be reached)
+max_epochs = 5         # stop criterion 2 (max epochs in training)
 show_error_freq = 5     # frequency of training status updates
 
 # K-fold crossvalidation
@@ -42,8 +42,8 @@ K = 3                   # only five folds to speed up this example
 CV = model_selection.KFold(K,shuffle=True)
 
 # Variable for classification error
-errors = np.zeros(K)
-errors_j = np.zeros(K)
+errors = np.zeros(K)*np.nan
+errors_j = np.zeros(K)*np.nan
 error_hist = np.zeros((max_epochs,K))
 Error_ANN = np.empty((K,1))
 bestnet = list()
@@ -51,7 +51,7 @@ bestnet_i = list()
 k=0
 for train_index, test_index in CV.split(X,y):
     print('\nCrossvalidation fold: {0}/{1}'.format(k+1,K))    
-    
+    print ('cv2')
     # extract training and test set for current CV fold
     X_train = X[train_index,:]
     y_train = y[train_index]
@@ -65,10 +65,13 @@ for train_index, test_index in CV.split(X,y):
         X_test_j = X[test_index_j,:]
         y_test_j = y[test_index_j]
         
-        besterror_j = 1e100
-        n_hidden_units = 0
+        print('cv1')
         
-        for j in range(1,6):
+        besterror_j = 1e100
+        n_hidden_units = 1
+        
+        for j in range(2,4):
+            print('j = {:d}'.format(j))
             ann_j = nl.net.newff([[-3, 3]]*M, [j, 1], [nl.trans.TanSig(),nl.trans.PureLin()])
             test_error_j = ann_j.train(X_train_j, y_train_j.reshape(-1,1), goal=learning_goal, epochs=max_epochs, show=show_error_freq)
             
@@ -94,7 +97,7 @@ for train_index, test_index in CV.split(X,y):
                 n_hidden_units = j
                 besterror_j = test_error_j[-1]
     
-
+    print('ude af cv1')
     best_train_error = 1e100
     for i in range(n_train):
         print('Training network {0}/{1}...'.format(i+1,n_train))
@@ -113,9 +116,9 @@ for train_index, test_index in CV.split(X,y):
     y_est = bestnet[k].sim(X_test).squeeze()
     errors[k] = np.power(y_est-y_test,2).sum().astype(float)/y_test.shape[0]
     Error_ANN[k] = 100*(y_est!=y_test).sum().astype(float)/len(y_test)
-    break
+
     k+=1
-    
+    break
 
 # Print the average least squares error
 print('Mean-square error: {0}'.format(np.mean(errors)))

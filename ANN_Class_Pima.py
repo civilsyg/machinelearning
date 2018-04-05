@@ -12,13 +12,13 @@ np.random.seed(2)
 plt.style.use('default') # Set plot theme
 
 
-X = X[:,[1,4]] # extract attributes vi want to use 
-y = np.array(pimaData[['classVariable']])
+X = X[:,[1,2,4]] # extract attributes vi want to use 
+y = np.array(pimaData[['classVariable']]) # real prediction 
 
 attributeNames = [
 #    'pregnant',
     'glucose',
-#    'bloodPressure',
+    'bloodPressure',
 #    'skinThickness',
     'bodyMass',
 #    'pedigreeFunction',
@@ -34,7 +34,7 @@ X = stats.zscore(X);
 n_hidden_units = 2     # number of hidden units
 n_train = 2             # number of networks trained in each k-fold
 learning_goal = 5      # stop criterion 1 (train mse to be reached)
-max_epochs = 100         # stop criterion 2 (max epochs in training)
+max_epochs = 2         # stop criterion 2 (max epochs in training)
 show_error_freq = 3     # frequency of training status updates
 
 

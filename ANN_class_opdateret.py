@@ -24,7 +24,7 @@ X = stats.zscore(X);
 # Parameters for neural network classifier
 n_hidden_units = 2     # number of hidden units
 n_train = 2             # number of networks trained in each k-fold
-learning_goal = 100      # stop criterion 1 (train mse to be reached)
+learning_goal = 10      # stop criterion 1 (train mse to be reached)
 max_epochs = 5         # stop criterion 2 (max epochs in training)
 show_error_freq = 3     # frequency of training status updates
 
