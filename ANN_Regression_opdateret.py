@@ -34,7 +34,7 @@ X = stats.zscore(X);
 n_hidden_units = 2      # number of hidden units
 n_train = 2             # number of networks trained in each k-fold
 learning_goal = 10     # stop criterion 1 (train mse to be reached)
-max_epochs = 20         # stop criterion 2 (max epochs in training)
+max_epochs = 2         # stop criterion 2 (max epochs in training)
 show_error_freq = 10     # frequency of training status updates
 
 # K-fold crossvalidation
