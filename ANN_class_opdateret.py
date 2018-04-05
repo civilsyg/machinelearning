@@ -10,7 +10,7 @@ from scipy import stats
 
 # Load Matlab data file and extract variables of interest
 
-#mat_data = loadmat('/Users/mikkelsinkjaer/Documents/GitHub/machinelearning/02450Toolbox_Python/Data/wine2.mat')
+mat_data = loadmat('/Users/mikkelsinkjaer/Documents/GitHub/machinelearning/02450Toolbox_Python/Data/wine2.mat')
 attributeNames = [name[0] for name in mat_data['attributeNames'][0]]
 X = mat_data['X']
 y = mat_data['y']
@@ -24,7 +24,7 @@ X = stats.zscore(X);
 # Parameters for neural network classifier
 n_hidden_units = 2     # number of hidden units
 n_train = 2             # number of networks trained in each k-fold
-learning_goal = 10      # stop criterion 1 (train mse to be reached)
+learning_goal = 100      # stop criterion 1 (train mse to be reached)
 max_epochs = 5         # stop criterion 2 (max epochs in training)
 show_error_freq = 3     # frequency of training status updates
 
@@ -67,8 +67,9 @@ for train_index, test_index in CV.split(X,y):
             test_error_j = ann_j.train(X_train_j, y_train_j.reshape(-1,1), goal=learning_goal, epochs=max_epochs, show=show_error_freq)
 
             for i in range(n_train):
-                print('Training network {0}/{1}...'.format(i+1,n_train))
+                print('Training network, hidden layer{0}/{1}...'.format(i+1,n_train))
                 # Create randomly initialized network with 2 layers
+
                 ann_i = nl.net.newff([[-3, 3]]*M, [j, 1], [nl.trans.TanSig(),nl.trans.PureLin()])
                 if i==0:
                     bestnet_i.append(ann_i)
@@ -80,13 +81,14 @@ for train_index, test_index in CV.split(X,y):
                     bestnet_i[k]=ann_i
                     besterror_j = train_error_i[-1]
                     #error_hist[range(len(train_error)),k] = train_error
-    
+
             y_est_j = bestnet_i[k].sim(X_test_j).squeeze()
             errors_j[k] = np.power(y_est_j-y_test_j,2).sum().astype(float)/y_test_j.shape[0]
 
             if errors_j[k] < besterror_j:
                 n_hidden_units = j
                 besterror_j = test_error_j[-1]
+
     print('ude af cv1')
     best_train_error = 1e100
     for i in range(n_train):

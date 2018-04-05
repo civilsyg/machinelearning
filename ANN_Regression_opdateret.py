@@ -34,7 +34,7 @@ X = stats.zscore(X);
 n_hidden_units = 2      # number of hidden units
 n_train = 2             # number of networks trained in each k-fold
 learning_goal = 100     # stop criterion 1 (train mse to be reached)
-max_epochs = 50         # stop criterion 2 (max epochs in training)
+max_epochs = 100         # stop criterion 2 (max epochs in training)
 show_error_freq = 5     # frequency of training status updates
 
 # K-fold crossvalidation
@@ -68,7 +68,7 @@ for train_index, test_index in CV.split(X,y):
         besterror_j = 1e100
         n_hidden_units = 0
         
-        for j in range(2,4):
+        for j in range(1,6):
             ann_j = nl.net.newff([[-3, 3]]*M, [j, 1], [nl.trans.TanSig(),nl.trans.PureLin()])
             test_error_j = ann_j.train(X_train_j, y_train_j.reshape(-1,1), goal=learning_goal, epochs=max_epochs, show=show_error_freq)
             
