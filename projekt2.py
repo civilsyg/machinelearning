@@ -56,7 +56,7 @@ pimaData = pimaData.drop(['insulin'], axis=1) #sletter kolonnen insulin
 PD_corr = pimaData.corr() #Returns the correlation between columns in a DataFrame
 
 PD_desc = pimaData.describe() #Summary statistics for numerical columns
-PD_desc.to_excel('summaryStat.xlsx')
+#PD_desc.to_excel('summaryStat.xlsx')
 
 PD_cov  = pimaData.cov() # Return the covariance between columns in a DataFrame 
 
