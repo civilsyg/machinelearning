@@ -1,13 +1,12 @@
 # exercise 8.2.5
-import sys
+#import sys
 #sys.path.append('/Users/mikkelsinkjaer/Documents/GitHub/machinelearning/02450Toolbox_Python/Scripts')
 from matplotlib.pyplot import (figure,plot, subplot, bar, title, show)
 import numpy as np
-from scipy.io import loadmat
 import neurolab as nl
 from sklearn import model_selection
 from scipy import stats
-from projekt2 import *
+from projekt2 import pimaData, X
 np.random.seed(2)
 plt.style.use('default') # Set plot theme
 
@@ -16,13 +15,13 @@ plt.style.use('default') # Set plot theme
 y = np.array(pimaData[['classVariable']]) # real prediction 
 
 attributeNames = [
-#    'pregnant',
+    'pregnant',
     'glucose',
     'bloodPressure',
-#    'skinThickness',
+    'skinThickness',
     'bodyMass',
-#    'pedigreeFunction',
-#    'age'
+    'pedigreeFunction',
+    'age'
     ]
 
 N, M = X.shape
@@ -31,7 +30,7 @@ C = 2
 X = stats.zscore(X);
 
 # Parameters for neural network classifier
-n_hidden_units = 2     # number of hidden units
+#n_hidden_units = 2     # number of hidden units
 n_train = 2             # number of networks trained in each k-fold
 learning_goal = 10      # stop criterion 1 (train mse to be reached)
 max_epochs = 20         # stop criterion 2 (max epochs in training)
@@ -134,4 +133,3 @@ subplot(2,1,2); plot((y_est-y_test)); title('Last CV-fold: prediction error (est
 
 show()
 
-print('Ran Exercise 8.2.5')

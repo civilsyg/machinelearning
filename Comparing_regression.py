@@ -11,18 +11,23 @@ import numpy as np
 from scipy import stats
 
 from Variable_selection_in_linear_reg import Error_test_fs_reg, Error_mean_reg
-#from ANN_RegPima import Errors_ANN_reg, Error_mean_ANN_reg
+from ANN_RegPima import Error_ANN_reg, Error_mean_ANN_reg
 
 Error_reg = Error_test_fs_reg
 #Error_reg = np.squeeze(np.asarray(Error_reg)).T
 
-Error_ANN_reg = np.array([[0.88469264],
-       [1.0421104 ],
-       [1.14429892],
-       [0.88926079],
-       [1.10124869]])
+Error_mean_reg = Error_mean_reg
 
-#Errors_ANN_reg
+Error_ANN_reg = Error_ANN_reg
+
+#np.array([[0.88469264],
+#       [1.0421104 ],
+#       [1.14429892],
+#       [0.88926079],
+#       [1.10124869]])
+
+
+Error_mean_ANN_reg = Error_mean_ANN_reg
 
 #Error_ANN.shape = (5,1)
 ## Crossvalidation
@@ -54,7 +59,7 @@ else:
 figure()
 boxplot(np.concatenate((Error_reg , Error_ANN_reg),axis=1))
 xlabel('Linear Regression   vs.   ANN')
-ylabel('R^2 error')
+ylabel('Squared error')
 title('Linear Regression vs. ANN')
-savefig('Linear Regression vs. ANN -R^2 error.png')
+savefig('Linear_Regression_vs_ANN_reg.png')
 show()
