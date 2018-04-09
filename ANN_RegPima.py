@@ -1,6 +1,6 @@
 # exercise 8.2.6
 
-from matplotlib.pyplot import figure, plot, subplot, title, show, bar,style, savefig
+from matplotlib.pyplot import figure, plot, title, show, bar,style, savefig, xlabel, ylabel 
 import numpy as np
 import neurolab as nl
 from sklearn import model_selection
@@ -109,7 +109,7 @@ for train_index, test_index in CV.split(X,y):
     print('Best train error: {0}...'.format(best_train_error))
     y_est = bestnet[k].sim(X_test)
     Error_ANN_reg[k] = np.power(y_est-y_test,2).sum().astype(float)/y_test.shape[0]
-    Error_mean_ANN_reg[k] = np.power(y.mean() - y_train).sum()/y_train.shape[0]
+    Error_mean_ANN_reg[k] = np.square(y.mean() - y_train).sum()/y_train.shape[0]
     k+=1
 
 # Print the average least squares error
@@ -119,11 +119,14 @@ print('Best hidden units: {0}'.format(n_hidden_units))
 
 figure();
 bar(range(0,K),Error_ANN_reg.squeeze()); title('Mean-square errors');
+xlabel('Number Fold')
+ylabel('Mean-square errors')
 savefig('Mean-square errors ANN Regression')
 show()
 
 figure();
-plot(error_hist); title('Training error as function of BP iterations');
+plot(error_hist); 
+title('Training error as function of BP iterations');
 savefig('Training error as function of BP iterations ANN Regression')
 show()
 
