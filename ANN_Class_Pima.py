@@ -52,6 +52,7 @@ best_y_est = []
 best_y_test = []
 bestError = 10000
 k=0
+units = np.zeros(K)
 
 for train_index, test_index in CV.split(X,y):
     print('\nCrossvalidation fold: {0}/{1}'.format(k+1,K))    
@@ -99,6 +100,7 @@ for train_index, test_index in CV.split(X,y):
             if errors_j[k] < besterror_j:
                 n_hidden_units = j
                 besterror_j = test_error_j[-1]
+            units[k] = n_hidden_units
 
     print('ude af cv1')
     best_train_error = 1e100
@@ -137,14 +139,12 @@ subplot(2,1,2); plot(error_hist); title('Training error as function of BP iterat
 savefig('trainingErrorANNClass.png',dpi=350)
 figure(figsize=(6,7));
 subplot(2,1,1); plot(best_y_est); plot(best_y_test); title('Best CV-fold: est_y vs. test_y'); 
-savefig('CVErrorsANNClass.png',dpi=350)
-subplot(2,1,2); plot((best_y_est-best_y_test)); title('Best CV-fold: prediction error (est_y-test_y)'); 
 
+subplot(2,1,2); plot((best_y_est-best_y_test)); title('Best CV-fold: prediction error (est_y-test_y)'); 
+savefig('CVErrorsANNClass.png',dpi=350)
 show()
 
-<<<<<<< HEAD
 
 errorbestANN = 100*(best_y_est!=best_y_test).sum().astype(float)/len(best_y_test)
 print('Ran Exercise 8.2.5')
-=======
->>>>>>> 76aee2060291140790ce65f3bbcab1f5f7907991
+
