@@ -85,7 +85,7 @@ for train_index, test_index in CV.split(X):
             if besterror_j >= errors_j:
                 besterror_j = errors_j
                 alpha = j
-                print('alpha = {:f}'.format(alpha))
+#                print('alpha = {:f}'.format(alpha))
         Alpha[k]=alpha
 
 
