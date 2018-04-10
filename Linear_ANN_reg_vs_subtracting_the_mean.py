@@ -32,7 +32,7 @@ K = 5
 
 # Test if classifiers are significantly different using methods in section 9.3.3
 # by computing credibility interval. Notice this can also be accomplished by computing the p-value using
-#[tstatistic, pvalue] = stats.ttest_ind(Error_reg,Error_ANN_reg)
+[tstatistic, pvalue] = stats.ttest_ind(Error_ANN_reg ,Error_mean_reg )
 # and test if the p-value is less than alpha=0.05. 
 z_ANN_reg = (Error_ANN_reg - Error_mean_reg)
 zb_ANN_reg= z_ANN_reg.mean()

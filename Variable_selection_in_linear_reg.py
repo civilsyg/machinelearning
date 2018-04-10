@@ -6,8 +6,12 @@ Created on Tue Mar  6 17:36:20 2018
 @author: ibenfjordkjaersgaard
 """
 
+
 from matplotlib.pyplot import figure, plot, subplot, title, xlabel, ylabel, show, clim, savefig
 #from mpl_toolkits import mplot3d
+import sys
+sys.path.append('/Users/ibenfjordkjaersgaard/Documents/GitHub/machinelearning/02450Toolbox_Python')
+
 import sklearn.linear_model as lm
 from sklearn import model_selection
 from toolbox_02450 import feature_selector_lr, bmplot
