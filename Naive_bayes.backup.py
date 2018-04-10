@@ -12,8 +12,7 @@ import pandas as pd
 from scipy.stats import zscore
 from scipy.linalg import svd
 from projekt2 import *
-np.random.seed(212812309)
-plt.style.use('default') # Set plot theme
+np.random.seed(2)
 
 
 #X = X[:,[2,3,4,5,6]] # extract attributes vi want to use 
@@ -72,8 +71,7 @@ for train_index, test_index in CV.split(X):
         besterror_j = 1e100
 
         
-        for j in range(1,1001):
-            j = j/10000000000000000
+        for j in range(1,1000):
             
             nb_classifier_j = MultinomialNB(alpha=j, fit_prior=est_prior)
             nb_classifier_j.fit(X_train_j, y_train_j)
@@ -87,7 +85,6 @@ for train_index, test_index in CV.split(X):
                 alpha = j
 #                print('alpha = {:f}'.format(alpha))
         Alpha[k]=alpha
-
 
 
     print(alpha)

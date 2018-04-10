@@ -1,12 +1,12 @@
 # exercise 6.1.2
 
-from matplotlib.pyplot import figure, plot, xlabel, ylabel, legend, show, boxplot, title
+from matplotlib.pyplot import figure, plot, xlabel, ylabel, legend, show, boxplot, title, style, savefig
 from sklearn import model_selection, tree
 import numpy as np
 from projekt2 import pimaData
 from scipy import stats
 
-
+style.use('default') # Set plot theme
 np.random.seed(2)
 
 # Load Matlab data file and extract variables of interest
@@ -35,6 +35,8 @@ attributeNames = attributeNames = [
 
 classNames = [ 'Ikke Diabetes','Diabetes']
 
+
+
 N, M = X.shape
 
 C = len(classNames)
@@ -45,12 +47,14 @@ tc = np.arange(2, 15, 1)
 # K-fold crossvalidation
 K = 5
 CV = model_selection.KFold(n_splits=K,shuffle=True)
-
+max_depth_t = np.zeros(K)
+trees = [None]*K
 # Initialize variable
 Error_train = np.empty((len(tc),K))
 Error_test = np.empty((len(tc),K))
 besterror_t = 1e100
-Error_dectree = np.empty((K,1))
+#Error_dectree = np.empty((K,1))
+Error_dectree = [None]*K
 Errors_s = np.empty((K,1))
 k=0
 for train_index, test_index in CV.split(X,y):
@@ -84,7 +88,7 @@ for train_index, test_index in CV.split(X,y):
     # mean af alle 5 test modelkompleksivitet
     Error_test_mean = Error_test.mean(1)
     # finder til hvilket t, som har den laveste mean 
-    max_depth_t = np.unravel_index(Error_test_mean.argmin(), Error_test_mean.shape)[0]+tc[0] 
+    max_depth_t[k] = np.unravel_index(Error_test_mean.argmin(), Error_test_mean.shape)[0]+tc[0] 
     
     #kan evt finde den t, som har den laveste af alle - tage ikke hensyn til mean? 
     #max_depth_t = np.unravel_index(Error_test.argmin(), Error_test.shape)[0]+1
@@ -92,16 +96,18 @@ for train_index, test_index in CV.split(X,y):
             
     
 
-    dtc = tree.DecisionTreeClassifier(criterion='gini', max_depth=max_depth_t)
+    dtc = tree.DecisionTreeClassifier(criterion='gini', max_depth=max_depth_t[k])
     model_dectree = dtc.fit(X_train, y_train)
     y_dectree = model_dectree.predict(X_test)
 
     Errors_s[k] = np.power(y_dectree-y_test,2).sum().astype(float)/y_test.shape[0]
     Error_dectree[k] = 100*(y_dectree!=y_test).sum().astype(float)/len(y_test)
-    
+    trees[k] = dtc # list of decision trees made 
     k+=1
 
     
+BestTreePerform = Error_dectree.index(min(Error_dectree)) # find index in the trees which has the smallest error
+trees[BestTreePerform]
 f = figure()
 boxplot(Error_test.T, positions=tc, showmeans=True)
 xlabel('Model complexity (max tree depth)')
@@ -113,8 +119,9 @@ plot(tc, Error_train.mean(1))
 plot(tc, Error_test.mean(1))
 xlabel('Model complexity (max tree depth)')
 ylabel('Error (misclassification rate, CV K={0})'.format(K))
-legend(['Error_train','Error_test'])
+legend(['Mean train error','mean test error'])
     
+savefig('performTree.png',dpi=350)
 show()
 
 

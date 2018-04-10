@@ -1,14 +1,14 @@
 # exercise 8.2.5
 #import sys
 #sys.path.append('/Users/mikkelsinkjaer/Documents/GitHub/machinelearning/02450Toolbox_Python/Scripts')
-from matplotlib.pyplot import (figure,plot, subplot, bar, title, show)
+from matplotlib.pyplot import (figure,plot, subplot, bar, title, show, savefig, style)
 import numpy as np
 import neurolab as nl
 from sklearn import model_selection
 from scipy import stats
 from projekt2 import pimaData, X
 np.random.seed(2)
-plt.style.use('default') # Set plot theme
+style.use('default') # Set plot theme
 
 
 #X = X[:,[1,2,4]] # extract attributes vi want to use 
@@ -33,12 +33,12 @@ X = stats.zscore(X);
 #n_hidden_units = 2     # number of hidden units
 n_train = 2             # number of networks trained in each k-fold
 learning_goal = 10      # stop criterion 1 (train mse to be reached)
-max_epochs = 20         # stop criterion 2 (max epochs in training)
+max_epochs = 50         # stop criterion 2 (max epochs in training)
 show_error_freq = 10     # frequency of training status updates
 
 
 # K-fold crossvalidation
-K = 3                   # only five folds to speed up this example
+K = 5                   # only five folds to speed up this example
 CV = model_selection.KFold(K,shuffle=True)
 
 # Variable for classification error
@@ -48,7 +48,11 @@ error_hist = np.zeros((max_epochs,K))*np.nan
 Error_ANN_class = np.empty((K,1))
 bestnet = list()
 bestnet_i = list()
+best_y_est = []
+best_y_test = []
+bestError = 10000
 k=0
+units = np.zeros(K)
 
 for train_index, test_index in CV.split(X,y):
     print('\nCrossvalidation fold: {0}/{1}'.format(k+1,K))    
@@ -69,7 +73,7 @@ for train_index, test_index in CV.split(X,y):
         besterror_j = 1e100
         n_hidden_units = 1
         
-        for j in range(2,4):
+        for j in range(1,9):
             print('j = {:d}'.format(j))
             ann_j = nl.net.newff([[-3, 3]]*M, [j, 1], [nl.trans.TanSig(),nl.trans.PureLin()])
             test_error_j = ann_j.train(X_train_j, y_train_j.reshape(-1,1), goal=learning_goal, epochs=max_epochs, show=show_error_freq)
@@ -96,6 +100,7 @@ for train_index, test_index in CV.split(X,y):
             if errors_j[k] < besterror_j:
                 n_hidden_units = j
                 besterror_j = test_error_j[-1]
+            units[k] = n_hidden_units
 
     print('ude af cv1')
     best_train_error = 1e100
@@ -117,6 +122,9 @@ for train_index, test_index in CV.split(X,y):
     y_est = (y_est>.5).astype(int)
     errors[k] = (y_est!=y_test).sum().astype(float)/y_test.shape[0]
     Error_ANN_class[k] = 100*(y_est!=y_test).sum().astype(float)/len(y_test)
+    if errors[k] < bestError:
+        best_y_est = y_est
+        best_y_test = y_test
     k+=1
     
 
@@ -126,10 +134,17 @@ print('Error rate: {0}%'.format(100*np.mean(errors)))
 
 figure(figsize=(6,7));
 subplot(2,1,1); bar(range(0,K),errors); title('CV errors');
+savefig('CVErrorsANNClass.png',dpi=350)
 subplot(2,1,2); plot(error_hist); title('Training error as function of BP iterations');
+savefig('trainingErrorANNClass.png',dpi=350)
 figure(figsize=(6,7));
-subplot(2,1,1); plot(y_est); plot(y_test); title('Last CV-fold: est_y vs. test_y'); 
-subplot(2,1,2); plot((y_est-y_test)); title('Last CV-fold: prediction error (est_y-test_y)'); 
+subplot(2,1,1); plot(best_y_est); plot(best_y_test); title('Best CV-fold: est_y vs. test_y'); 
 
+subplot(2,1,2); plot((best_y_est-best_y_test)); title('Best CV-fold: prediction error (est_y-test_y)'); 
+savefig('CVErrorsANNClass.png',dpi=350)
 show()
+
+
+errorbestANN = 100*(best_y_est!=best_y_test).sum().astype(float)/len(best_y_test)
+print('Ran Exercise 8.2.5')
 
