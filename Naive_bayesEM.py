@@ -8,7 +8,7 @@ import numpy as np
 import xlrd
 import numpy as np
 from scipy import stats
-from matplotlib.pyplot import (figure, title, subplot, plot, hist, show, boxplot,xticks,xlabel,ylabel,legend)
+from matplotlib.pyplot import (figure, title, subplot, plot, hist, show, boxplot,xticks,xlabel,ylabel,legend, style)
 from matplotlib import pyplot
 import pandas as pd
 from scipy.stats import zscore
@@ -16,7 +16,7 @@ from scipy.linalg import svd
 
 from projekt2 import *
 np.random.seed(20)
-plt.style.use('default') # Set plot theme
+style.use('default') # Set plot theme
 
 
 #X = X[:,[2,3,4,5,6]] # extract attributes vi want to use 

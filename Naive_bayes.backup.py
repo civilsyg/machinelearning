@@ -71,8 +71,7 @@ for train_index, test_index in CV.split(X):
         besterror_j = 1e100
 
         
-        for j in range(1,1001):
-            j = j/10000000000000000
+        for j in range(1,1000):
             
             nb_classifier_j = MultinomialNB(alpha=j, fit_prior=est_prior)
             nb_classifier_j.fit(X_train_j, y_train_j)
@@ -86,7 +85,6 @@ for train_index, test_index in CV.split(X):
                 alpha = j
 #                print('alpha = {:f}'.format(alpha))
         Alpha[k]=alpha
-
 
 
     print(alpha)

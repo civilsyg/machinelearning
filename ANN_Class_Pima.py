@@ -1,14 +1,14 @@
 # exercise 8.2.5
 #import sys
 #sys.path.append('/Users/mikkelsinkjaer/Documents/GitHub/machinelearning/02450Toolbox_Python/Scripts')
-from matplotlib.pyplot import (figure,plot, subplot, bar, title, show, savefig)
+from matplotlib.pyplot import (figure,plot, subplot, bar, title, show, savefig, style)
 import numpy as np
 import neurolab as nl
 from sklearn import model_selection
 from scipy import stats
 from projekt2 import pimaData, X
 np.random.seed(2)
-plt.style.use('default') # Set plot theme
+style.use('default') # Set plot theme
 
 
 #X = X[:,[1,2,4]] # extract attributes vi want to use 
