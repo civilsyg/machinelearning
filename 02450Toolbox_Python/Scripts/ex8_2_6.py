@@ -31,13 +31,13 @@ X = stats.zscore(X);
 
 # Parameters for neural network classifier
 n_hidden_units = 2      # number of hidden units
-n_train = 2             # number of networks trained in each k-fold
-learning_goal = 100     # stop criterion 1 (train mse to be reached)
-max_epochs = 64         # stop criterion 2 (max epochs in training)
+n_train = 1            # number of networks trained in each k-fold
+learning_goal =50     # stop criterion 1 (train mse to be reached)
+max_epochs = 10         # stop criterion 2 (max epochs in training)
 show_error_freq = 5     # frequency of training status updates
 
 # K-fold crossvalidation
-K = 3                   # only three folds to speed up this example
+K = 2                  # only three folds to speed up this example
 CV = model_selection.KFold(K,shuffle=True)
 
 # Variable for classification error
