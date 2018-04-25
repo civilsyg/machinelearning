@@ -3,7 +3,7 @@ import sys
 sys.path.append('/Users/ibenfjordkjaersgaard/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/machinelearning/Projekt_3')
 
 
-from matplotlib.pyplot import figure, show
+from matplotlib.pyplot import figure, show, savefig
 import numpy as np
 from toolbox_02450 import clusterplot
 from scipy.cluster.hierarchy import linkage, fcluster, dendrogram
@@ -46,7 +46,7 @@ C = len(classNames)
 
 
 # Perform hierarchical/agglomerative clustering on data matrix
-Method = 'single' # complete #average # weighted # centroid
+Method = 'ward' # complete #average # weighted # centroid
 Metric = 'euclidean'
 
 Z = linkage(X, method=Method, metric=Metric)
@@ -55,7 +55,9 @@ Z = linkage(X, method=Method, metric=Metric)
 Maxclust = 2
 cls = fcluster(Z, criterion='maxclust', t=Maxclust)
 figure(1)
-clusterplot(X, cls.reshape(cls.shape[0],1), y=y)
+clusterplot(X[:,[1,5]], cls.reshape(cls.shape[0],1), y=y)
+savefig('hierarchicalScatterPlot.png',dpi=500)
+
 
 # Display dendrogram
 max_display_levels=6

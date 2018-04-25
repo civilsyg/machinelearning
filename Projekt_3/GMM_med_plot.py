@@ -113,13 +113,15 @@ show()
 print('Ran Exercise 11.1.5')
 
 
+
+
 # Plot results:
-figure(figsize=(14,9))
-clusterplot(X, clusterid=cls, centroids=cds, y=y, covars=covs)
-show()
+#figure(figsize=(14,9))
+#clusterplot(X, clusterid=cls, centroids=cds, y=y, covars=covs)
+#show()
 
 ## In case the number of features != 2, then a subset of features most be plotted instead.
 figure(figsize=(14,9))
-idx = [0,1] # feature index, choose two features to use as x and y axis in the plot
+idx = [2,5] # feature index, choose two features to use as x and y axis in the plot
 clusterplot(X[:,idx], clusterid=cls, centroids=cds[:,idx], y=y, covars=covs[:,idx,:][:,:,idx])
 show()

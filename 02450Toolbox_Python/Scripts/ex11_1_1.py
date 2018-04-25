@@ -1,4 +1,6 @@
 # exercise 11.1.1
+import sys
+sys.path.append('/Users/mikkelsinkjaer/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/machinelearning/02450Toolbox_Python/Tools')
 from matplotlib.pyplot import figure, show
 import numpy as np
 from scipy.io import loadmat
@@ -15,7 +17,7 @@ classNames = [name[0][0] for name in mat_data['classNames']]
 N, M = X.shape
 C = len(classNames)
 # Number of clusters
-K = 10
+K = 2
 cov_type = 'full'       
 # type of covariance, you can try out 'diag' as well
 reps = 1                
