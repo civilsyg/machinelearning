@@ -20,7 +20,7 @@ else:
 filename = 'pimaBinarize.txt'.format(dir_sep)
 minSup = 50
 minConf = 70
-maxRule = 4
+maxRule = 3
 
 # Run Apriori Algorithm
 print('Mining for frequent itemsets by the Apriori algorithm')
