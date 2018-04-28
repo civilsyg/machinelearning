@@ -1,7 +1,7 @@
 # exercise 11.4.1
 import numpy as np
 from matplotlib.pyplot import (figure, imshow, bar, title, xticks, yticks, cm,
-                               subplot, show)
+                               subplot, show, savefig)
 from scipy.io import loadmat
 from toolbox_02450 import gausKernelDensity
 from sklearn.neighbors import NearestNeighbors
@@ -61,8 +61,10 @@ density = density[i].reshape(-1,)
 # Plot density estimate of outlier score
 figure(1)
 bar(range(20),density[:20])
-title('Density estimate')
+xticks(range(20), i[:20], rotation='vertical')
 
+title('Density estimate')
+savefig('Density_estimate.png')
 
 
 
@@ -83,8 +85,9 @@ density = density[i]
 # Plot k-neighbor estimate of outlier score (distances)
 figure(3)
 bar(range(20),density[:20])
+xticks(range(20), i[:20], rotation='vertical')
 title('KNN density: Outlier score')
-
+savefig('KNN_density_Outlier_score.png')
 
 
 ### K-nearest neigbor average relative density
@@ -102,8 +105,9 @@ avg_rel_density = avg_rel_density[i_avg_rel]
 # Plot k-neighbor estimate of outlier score (distances)
 figure(5)
 bar(range(20),avg_rel_density[:20])
+xticks(range(20), i[:20], rotation='vertical')
 title('KNN average relative density: Outlier score')
-
+savefig('KNN_average_relative_density_Outlier_score.png')
 
 ### Distance to 5'th nearest neighbor outlier score
 K = 5
@@ -121,8 +125,9 @@ score = score[i[::-1]]
 # Plot k-neighbor estimate of outlier score (distances)
 figure(7)
 bar(range(20),score[:20])
+xticks(range(20), i[:20], rotation='vertical')
 title('5th neighbor distance: Outlier score')
-
+savefig('5th_neighbor_distance_Outlier_score.png')
 
 
 print('Ran Exercise 11.4.1')

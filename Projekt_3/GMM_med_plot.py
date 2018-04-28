@@ -7,7 +7,7 @@ Created on Sun Apr 22 14:56:40 2018
 """
 
 # exercise 11.1.5
-from matplotlib.pyplot import figure, plot, legend, xlabel, show
+from matplotlib.pyplot import figure, plot, legend, xlabel, show, savefig
 import numpy as np
 from sklearn.mixture import GaussianMixture
 from sklearn import model_selection
@@ -35,7 +35,7 @@ attributeNames = [
 #                   'bodyMass','pedigreeFunction','age',
 #                   'classVariable'],axis=1)
 
-X = stats.zscore(X); #Normalize data
+#X = stats.zscore(X); #Normalize data
 #X = X.values
 
 
@@ -82,7 +82,7 @@ for t,K in enumerate(KRange):
             # compute negative log likelihood of X_test
             CVE[t] += -gmm.score_samples(X_test).sum()
 
-gmm = GaussianMixture(n_components=4, covariance_type=covar_type, n_init=reps).fit(X)
+gmm = GaussianMixture(n_components=2, covariance_type=covar_type, n_init=reps).fit(X)
 cls = gmm.predict(X)
 # extract cluster labels
 cds = gmm.means_
@@ -108,6 +108,7 @@ plot(KRange, AIC,'-xr')
 plot(KRange, 2*CVE,'-ok')
 legend(['BIC', 'AIC', 'Crossvalidation'])
 xlabel('K')
+savefig('BIC_og_AIC_ og_Crossvalidation.png')
 show()
 
 print('Ran Exercise 11.1.5')

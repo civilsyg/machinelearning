@@ -1,9 +1,10 @@
 import numpy as np
-from subprocess import run
 import re
 import os
 import time
 from sys import platform
+from subprocess import run
+
 
 if platform.startswith('linux'): #== "linux" or platform == "linux2":
     ext = ''  # Linux
