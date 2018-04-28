@@ -7,7 +7,7 @@ Created on Sun Apr 22 14:56:40 2018
 """
 
 # exercise 11.1.5
-from matplotlib.pyplot import figure, plot, legend, xlabel, show
+from matplotlib.pyplot import figure, plot, legend, xlabel, show, savefig
 import numpy as np
 from sklearn.mixture import GaussianMixture
 from sklearn import model_selection
@@ -15,7 +15,8 @@ from toolbox_02450 import clusterplot
 from scipy import stats
 # Load Matlab data file and extract variables of interest
 # Load data from matlab file
-from projekt3 import pimaData, X
+from projekt3 import pimaData, X , Z
+import pandas as pd 
 np.random.seed(2)
 
 
@@ -35,9 +36,9 @@ attributeNames = [
 #                   'bodyMass','pedigreeFunction','age',
 #                   'classVariable'],axis=1)
 
-X = stats.zscore(X); #Normalize data
+#X = stats.zscore(X); #Normalize data
 #X = X.values
-
+X = Z
 
 classNames = ['Non diabetic', 'Diabetic']
 N, M = X.shape
@@ -82,8 +83,10 @@ for t,K in enumerate(KRange):
             # compute negative log likelihood of X_test
             CVE[t] += -gmm.score_samples(X_test).sum()
 
-gmm = GaussianMixture(n_components=4, covariance_type=covar_type, n_init=reps).fit(X)
+gmm = GaussianMixture(n_components=2, covariance_type=covar_type, n_init=reps).fit(X)
 cls = gmm.predict(X)
+clsGMM= pd.DataFrame(cls)
+clsGMM.to_csv("clsGMM.csv")
 # extract cluster labels
 cds = gmm.means_
 # extract cluster centroids (means of gaussians)
@@ -107,7 +110,8 @@ plot(KRange, BIC,'-*b')
 plot(KRange, AIC,'-xr')
 plot(KRange, 2*CVE,'-ok')
 legend(['BIC', 'AIC', 'Crossvalidation'])
-xlabel('K')
+xlabel('Cluster')
+savefig('KRange.png',dpi=300)
 show()
 
 print('Ran Exercise 11.1.5')
@@ -120,8 +124,10 @@ print('Ran Exercise 11.1.5')
 #clusterplot(X, clusterid=cls, centroids=cds, y=y, covars=covs)
 #show()
 
-## In case the number of features != 2, then a subset of features most be plotted instead.
-figure(figsize=(14,9))
-idx = [2,5] # feature index, choose two features to use as x and y axis in the plot
+### In case the number of features != 2, then a subset of features most be plotted instead.
+figure(figsize=(5,5))
+idx = [0,1] # feature index, choose two features to use as x and y axis in the plot
 clusterplot(X[:,idx], clusterid=cls, centroids=cds[:,idx], y=y, covars=covs[:,idx,:][:,:,idx])
 show()
+df = pd.DataFrame(cds)
+df.to_csv("cdf.csv")
