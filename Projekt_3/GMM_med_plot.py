@@ -125,9 +125,10 @@ print('Ran Exercise 11.1.5')
 #show()
 
 ### In case the number of features != 2, then a subset of features most be plotted instead.
-figure(figsize=(5,5))
+figure(figsize=(10,7))
 idx = [0,1] # feature index, choose two features to use as x and y axis in the plot
 clusterplot(X[:,idx], clusterid=cls, centroids=cds[:,idx], y=y, covars=covs[:,idx,:][:,:,idx])
+savefig('clusterPlotGMM.png',dpi=300)
 show()
 df = pd.DataFrame(cds)
 df.to_csv("cdf.csv")

@@ -18,9 +18,9 @@ else:
     raise NotImplementedError()
 
 filename = 'pimaBinarize.txt'.format(dir_sep)
-minSup = 50
-minConf = 70
-maxRule = 3
+minSup = 40
+minConf = 85
+maxRule = 6
 
 # Run Apriori Algorithm
 print('Mining for frequent itemsets by the Apriori algorithm')

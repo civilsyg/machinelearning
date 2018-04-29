@@ -60,7 +60,7 @@ cls = fcluster(Z, criterion='maxclust', t=Maxclust)
 clsHie= pd.DataFrame(cls)
 clsHie.to_csv("clsHie.csv")
 figure(1)
-X=X*(-1)
+
 clusterplot(X[:,[0,1]], cls.reshape(cls.shape[0],1), y=y)
 
 savefig('hierarchicalScatterPlot.png',dpi=300)
