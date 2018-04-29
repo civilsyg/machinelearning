@@ -110,8 +110,13 @@ plot(KRange, BIC,'-*b')
 plot(KRange, AIC,'-xr')
 plot(KRange, 2*CVE,'-ok')
 legend(['BIC', 'AIC', 'Crossvalidation'])
+<<<<<<< HEAD
+xlabel('K')
+savefig('BIC_og_AIC_ og_Crossvalidation.png')
+=======
 xlabel('Cluster')
 savefig('KRange.png',dpi=300)
+>>>>>>> cd6e4b510bbba5734bf395596f7f1f69cf0b1d14
 show()
 
 print('Ran Exercise 11.1.5')
